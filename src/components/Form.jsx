@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import Error from './Error';
 
-const Form = () => {
+const Form = ({ setSearch }) => {
   const [word, setWord] = useState('');
   const [error, setError] = useState(false);
   const searchImages = (event) => {
     event.preventDefault();
 
     // Validar campo
+
     if (word.trim() === '') {
       setError(true);
       return;
     }
 
-    setError(true);
-
+    setError(false);
     // Enviar término de busqueda a componente principal
+    setSearch(word);
   };
   return (
     <form action="" onSubmit={searchImages}>
