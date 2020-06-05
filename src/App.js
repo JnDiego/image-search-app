@@ -7,6 +7,10 @@ function App() {
   const [search, setSearch] = useState('');
   //State de imagenes desde la API
   const [images, setImages] = useState([]);
+  // State de página actual
+  const [actualpage, setActualPage] = useState(1);
+  // State de total paginas
+  const [totalpages, setTotalPages] = useState(1);
 
   useEffect(() => {
     if (search === '') return;
@@ -19,9 +23,25 @@ function App() {
       const result = await response.json();
 
       setImages(result.hits);
+      // Calcular el total de paginas
+      const calculateTotalPages = Math.ceil(result.totalHits / imagesByPage);
+      setTotalPages(calculateTotalPages);
     };
     fetchAPI();
   }, [search]);
+
+  // Definir página anterior
+  const previousPage = () => {
+    const newActualPage = actualpage - 1;
+    if (newActualPage === 0) return;
+    setActualPage(newActualPage);
+  };
+  // Definir página siguiente
+  const nextPage = () => {
+    const newActualPage = actualpage + 1;
+    if (newActualPage > totalpages) return;
+    setActualPage(newActualPage);
+  };
   return (
     <div className="container">
       <div className="jumbotron">
@@ -30,6 +50,12 @@ function App() {
       </div>
       <div className="row justify-content-center">
         <ImageList images={images} />
+        <button type="button" className="btn btn-info mr-1" onClick={previousPage}>
+          &laquo; Previous page
+        </button>
+        <button type="button" className="btn btn-info" onClick={nextPage}>
+          Next page &raquo;
+        </button>
       </div>
     </div>
   );
